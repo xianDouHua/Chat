@@ -26,21 +26,29 @@ public class Login {
 		FileWriter writer;
 		File file=new File("UserInfo.dat");
 		BufferedReader reader=null;
-		String userinfo="read";
+		String name="read";
+		String code="read";
 		try {
 			reader=new BufferedReader(new FileReader(file));
-			while(userinfo!=null){
-				userinfo=reader.readLine();
-				if(userinfo==username+password){
-					reader.close();
-					return -1;
+			while(name!=null&&code!=null){
+				name=reader.readLine();
+				code=reader.readLine();
+				if(name!=null&&code!=null){
+					if(name.equals(username)){
+						reader.close();
+						return -1;
+					}
+					if(code.equals(password)){
+						reader.close();
+						return -1;
+					}
 				}
+				else 
+					break;
 			}
 			reader.close();
-			writer=new FileWriter(file);
-			writer.write(username);
-			writer.flush();
-			writer.write(password+"\n");
+			writer=new FileWriter(file,true);
+			writer.write(username+"\n"+password);
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
@@ -49,33 +57,25 @@ public class Login {
 		return 0;
 	}
 	
-	public int login(){
+	public int login() throws IOException{
 		File file=new File("UserInfo.dat");
 		BufferedReader reader=null;
-		String userinfo="read";
+		String name="read";
+		String code="read";
 		try {
 			reader=new BufferedReader(new FileReader(file));
-			while(userinfo!=null){
-				try {
-					userinfo=reader.readLine();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				if(userinfo==username+password){
-					try {
+			while(name!=null&&code!=null){
+				name=reader.readLine();
+				code=reader.readLine();
+				if(name!=null&&code!=null){
+					if(name.equals(username)&&code.equals(password)){
 						reader.close();
-					} catch (IOException e) {
-						e.printStackTrace();
+						return 0;
 					}
-					return 0;
 				}
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
 			reader.close();
-		} catch (IOException e) {
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return -1;

@@ -108,7 +108,7 @@ public class GroupChatLogin {
 				writer.flush();
 				writer.println(userNameText.getText());
 				writer.flush();				
-				writer.println(passwordText.getPassword().toString());
+				writer.println(passwordText.getPassword());
 				writer.flush();
 				try {
 					mes=reader.readLine();
@@ -134,7 +134,7 @@ public class GroupChatLogin {
 				writer.flush();
 				writer.println(userNameText.getText());
 				writer.flush();				
-				writer.println(passwordText.getPassword().toString());
+				writer.println(passwordText.getPassword());
 				writer.flush();
 				try {
 					mes=reader.readLine();
