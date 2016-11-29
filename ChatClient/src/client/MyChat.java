@@ -1,5 +1,5 @@
 package client;
-
+//客户端开始处，选择私聊或群聊
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;

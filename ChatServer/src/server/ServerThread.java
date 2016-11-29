@@ -32,41 +32,43 @@ public class ServerThread extends Thread {
 	public void run(){
 		try {
 			writer=new PrintWriter(socket.getOutputStream());
-			message=reader.readLine();
-			if(message.equals("Register")){
-				while(true){
-					message1=reader.readLine();
-					message2=reader.readLine();
-					login=new Login(message1,message2);
-					state=login.register();
-					if(state==0){
-						writer.println("SUCCESS");
-						writer.flush();
-						break;
-					}
-					else if(state==-1){
-						writer.println("ERROR");
-						writer.flush();
-					}
+			while(true){
+				message=reader.readLine();
+				if(message.equals("Register")){
+					//while(true){
+						message1=reader.readLine();
+						message2=reader.readLine();
+						login=new Login(message1,message2);
+						state=login.register();
+						if(state==0){
+							writer.println("SUCCESS");
+							writer.flush();
+							break;
+						}
+						else if(state==-1){
+							writer.println("ERROR");
+							writer.flush();
+						}
+					//}
 				}
-			}
-			if(message.equals("Login")){
-				while(true){
-					message1=reader.readLine();
-					message2=reader.readLine();
-					login=new Login(message1,message2);
-					state=login.login();
-					if(state==0){
-						writer.println("SUCCESS");
-						writer.flush();
-						break;
-					}
-					else if(state==-1){
-						writer.println("ERROR");
-						writer.flush();
-					}
+				if(message.equals("Login")){
+					//while(true){
+						message1=reader.readLine();
+						message2=reader.readLine();
+						login=new Login(message1,message2);
+						state=login.login();
+						if(state==0){
+							writer.println("SUCCESS");
+							writer.flush();
+							break;
+						}
+						else if(state==-1){
+							writer.println("ERROR");
+							writer.flush();
+						}
+					//}
 				}
-			}
+			}			
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -93,6 +95,7 @@ public class ServerThread extends Thread {
 								break;
 							}
 						}
+						socket.close();
 						break;
 					}
 				//}
