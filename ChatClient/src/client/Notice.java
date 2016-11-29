@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 public class Notice {
 
 	private JFrame frame;
+	private String mes;
 
 	/**
 	 * Launch the application.
@@ -19,7 +20,7 @@ public class Notice {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Notice window = new Notice();
+					Notice window = new Notice("Login");
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -31,7 +32,8 @@ public class Notice {
 	/**
 	 * Create the application.
 	 */
-	public Notice() {
+	public Notice(String mes) {
+		this.mes=mes;
 		initialize();
 	}
 
@@ -45,7 +47,11 @@ public class Notice {
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
 		
-		JLabel label = new JLabel("\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\u8BEF\uFF01");
+		if(mes.equals("Login"))
+			mes="\u7528\u6237\u540D\u6216\u5BC6\u7801\u9519\u8BEF\uFF01";
+		else if(mes.equals("Register"))
+			mes="\u5DF2\u6CE8\u518C\u8FC7\u7684\u7528\u6237\u540D\uFF01";
+		JLabel label = new JLabel(mes);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(10, 61, 227, 15);
 		frame.getContentPane().add(label);

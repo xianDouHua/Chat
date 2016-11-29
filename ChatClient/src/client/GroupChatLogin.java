@@ -21,6 +21,7 @@ public class GroupChatLogin {
 	private JFrame frame;
 	private JTextField userNameText;
 	private JPasswordField passwordText;
+	private String mes;
 
 	/**
 	 * Launch the application.
@@ -110,12 +111,13 @@ public class GroupChatLogin {
 				writer.println(passwordText.getPassword().toString());
 				writer.flush();
 				try {
-					String mes=reader.readLine();
+					mes=reader.readLine();
 					if(mes.equals("ERROR")){
-						new Notice();
+						passwordText.setText("");
+						new Notice("Login");
 					}else if(mes.equals("SUCCESS")){
 						frame.dispose();
-						new GroupChat();
+						new GroupChat(socket);
 					}else{
 						userNameText.setText(mes);
 					}
@@ -128,10 +130,26 @@ public class GroupChatLogin {
 		//×¢²á
 		registerButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
+				writer.println("Register");
+				writer.flush();
 				writer.println(userNameText.getText());
-				frame.dispose();
-				new GroupChat();				
-			}			
+				writer.flush();				
+				writer.println(passwordText.getPassword().toString());
+				writer.flush();
+				try {
+					mes=reader.readLine();
+					if(mes.equals("ERROR")){
+						new Notice("Register");
+					}else if(mes.equals("SUCCESS")){
+						frame.dispose();
+						new GroupChat(socket);
+					}else{
+						userNameText.setText(mes);
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}				
+			}		
 		});
 		
 		//ÍË³ö

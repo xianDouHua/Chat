@@ -73,7 +73,7 @@ public class MyChat {
 			public void actionPerformed(ActionEvent e) {
 				frameChat.dispose();
 				try {
-					GroupChatLogin gcl=new GroupChatLogin();
+					new GroupChatLogin();
 					
 				} catch (UnknownHostException e1) {
 					e1.printStackTrace();
