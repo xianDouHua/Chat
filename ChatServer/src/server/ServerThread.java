@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
-
+/**
+ *向用户发送在线用户列表,发送前先发送提示消息"###UPDATEUSERLIST###",然后发送用户数，最后发送列表
+ */
 public class ServerThread extends Thread {
 	
 	private Socket socket=null;//当前用户的socket
@@ -32,10 +34,10 @@ public class ServerThread extends Thread {
 	public void run(){
 		try {
 			writer=new PrintWriter(socket.getOutputStream());
+			//注册或登录
 			while(true){
 				message=reader.readLine();
 				if(message.equals("Register")){
-					//while(true){
 						message1=reader.readLine();
 						message2=reader.readLine();
 						login=new Login(message1,message2);
@@ -49,10 +51,8 @@ public class ServerThread extends Thread {
 							writer.println("ERROR");
 							writer.flush();
 						}
-					//}
 				}
 				if(message.equals("Login")){
-					//while(true){
 						message1=reader.readLine();
 						message2=reader.readLine();
 						login=new Login(message1,message2);
@@ -66,7 +66,6 @@ public class ServerThread extends Thread {
 							writer.println("ERROR");
 							writer.flush();
 						}
-					//}
 				}
 			}			
 		} catch (IOException e1) {
@@ -76,12 +75,15 @@ public class ServerThread extends Thread {
 		userName=message1;
 		UserInfoList.add(new UserInfo(socket,userName));
 		
+		//用户成功登录，向客户端发送在线用户列表
+		sendUserList();
+		
 		try {
 			//群聊阶段
 			while(true){
 				message=reader.readLine();
+				synchronized(this){
 				//向所有在线用户发送消息
-				//synchronized(this){
 					for(int i=0;i<UserInfoList.size();i++){
 						writer = new PrintWriter(UserInfoList.get(i).getSocket().getOutputStream());
 						writer.println( userName+ " says: " + message);
@@ -89,16 +91,46 @@ public class ServerThread extends Thread {
 					}
 					//用户发送消息“bye”表示退出群聊，从List中删除该用户
 					if(message.equals("bye")){
+						//synchronized(this){//防止两个线程同时删除
 						for(int i=0;i<UserInfoList.size();i++){
 							if(UserInfoList.get(i).getUserName().equals(userName)){
 								UserInfoList.remove(i);
 								break;
 							}
 						}
+						//}
+						//用户列表更新后向各客户端发送新列表
+						sendUserList();
 						socket.close();
 						break;
 					}
-				//}
+				}	
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//一旦该用户上线或下线，向所有客户端发送最新的在线用户列表
+	private void sendUserList(){
+		try {
+			PrintWriter pw=null;
+			//String onlineUsers="";//用于存储用户列表
+			//for(int i=0;i<UserInfoList.size();i++){
+			//	onlineUsers.concat(UserInfoList.get(i).getUserName());
+			//	onlineUsers.concat("\n");
+			//}
+			for(int i=0;i<UserInfoList.size();i++){
+				pw=new PrintWriter(UserInfoList.get(i).getSocket().getOutputStream());
+				pw.println("###UPDATEUSERLIST###");//发送提示消息
+				pw.flush();
+				pw.println(UserInfoList.size());//发送用户数
+				pw.flush();
+				for(int j=0;j<UserInfoList.size();j++){
+					pw.println(UserInfoList.get(j).getUserName());
+					pw.flush();
+				}
+				//pw.write(onlineUsers);//发送列表
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

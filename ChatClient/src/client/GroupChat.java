@@ -14,13 +14,15 @@ import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-import javax.swing.border.TitledBorder;
 import java.awt.Color;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.JPanel;
 
+/**
+ * 每次客户端接受消息时，都会先接收一条在线用户列表的更新消息"###UPDATEUSERLIST###"，接收到则接收新的用户列表
+ * 用户输入"@用户名B"就会进入与另一用户B的私聊，弹出一个私聊对话框（如果该用户B不存在则发送至群聊）
+ * 服务器向用户B发送私聊请求的消息，B的客户端识别请求后弹出私聊对话框
+ * */
 public class GroupChat {
 
 	private JFrame frame;
@@ -32,7 +34,7 @@ public class GroupChat {
 	private String message;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private JScrollPane scrollPane;
-	private int line=0;
+	private TextArea onlineUserText;
 
 	/**
 	 * Launch the application.
@@ -86,7 +88,7 @@ public class GroupChat {
 		receivedMessageText.setBackground(Color.WHITE);
 		receivedMessageText.setForeground(Color.BLACK);
 		receivedMessageText.setEditable(false);
-		receivedMessageText.setBounds(10, 10, 516, 325);
+		receivedMessageText.setBounds(10, 10, 333, 325);
 		frame.getContentPane().add(receivedMessageText);
 		//receivedMessageText.setCaretColor(Color.LIGHT_GRAY);
 		//receivedMessageText.setBorder(new TitledBorder(null, "\u804A\u5929\u5BA4", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -100,6 +102,11 @@ public class GroupChat {
 		scrollPane.setViewportView(sendMessageText);
 		sendMessageText.setColumns(10);
 		
+		onlineUserText = new TextArea();
+		onlineUserText.setEditable(false);
+		onlineUserText.setBounds(349, 10, 179, 325);
+		frame.getContentPane().add(onlineUserText);
+		
 		//发送消息
 		sendButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
@@ -111,6 +118,7 @@ public class GroupChat {
 				if(message.equals("bye")){
 					try {
 						socket.close();
+						onlineUserText.setText("");
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -129,13 +137,19 @@ public class GroupChat {
 			while(socket.isConnected()){
 				try {
 					message=reader.readLine();
-					line+=2;
-					//if(line>=16){
-					//	receivedMessageText.setText("");
-					//	line=0;
-					//}
-					receivedMessageText.append(dateFormat.format(new Date())+'\n');
-					receivedMessageText.append("   "+message+'\n');
+					if(message.equals("###UPDATEUSERLIST###")){
+						//更新在线用户列表
+						onlineUserText.setText("当前在线用户：\n");
+						message=reader.readLine();//接收到用户数
+						int num=Integer.parseInt(message);
+						for(int i=0;i<num;i++){
+							message=reader.readLine();
+							onlineUserText.append(message+'\n');
+						}
+					}else{
+						receivedMessageText.append(dateFormat.format(new Date())+'\n');
+						receivedMessageText.append("   "+message+'\n');
+					}
 				} catch (IOException e) {
 					receivedMessageText.append("***YOU ARE OFFLINE***");
 					break;

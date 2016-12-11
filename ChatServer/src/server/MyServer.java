@@ -9,8 +9,10 @@ import java.util.List;
 import server.ServerThread;
 import server.UserInfo;
 
-/*聊天程序服务器端
- * 端口号：5555*/
+/**
+ * 聊天程序服务器端
+ * 端口号：5555
+ * */
 
 public class MyServer {
 
