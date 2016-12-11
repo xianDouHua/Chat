@@ -38,17 +38,13 @@ public class Login {
 						reader.close();
 						return -1;
 					}
-					if(code.equals(password)){
-						reader.close();
-						return -1;
-					}
 				}
 				else 
 					break;
 			}
 			reader.close();
 			writer=new FileWriter(file,true);
-			writer.write(username+"\n"+password);
+			writer.write(username+"\n"+password+"\n");
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {

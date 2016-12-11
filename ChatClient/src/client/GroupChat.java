@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.EventQueue;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -24,7 +25,7 @@ public class GroupChat {
 
 	private JFrame frame;
 	private JTextArea sendMessageText;
-	private JTextArea receivedMessageText;
+	private TextArea receivedMessageText;
 	private Socket socket;
 	private PrintWriter writer;
 	private BufferedReader reader;
@@ -72,6 +73,7 @@ public class GroupChat {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("\u804A\u5929\u5BA4");
 		frame.setBounds(100, 100, 554, 496);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -80,12 +82,14 @@ public class GroupChat {
 		sendButton.setBounds(435, 424, 93, 23);
 		frame.getContentPane().add(sendButton);
 		
-		receivedMessageText = new JTextArea();
+		receivedMessageText = new TextArea();
+		receivedMessageText.setBackground(Color.WHITE);
+		receivedMessageText.setForeground(Color.BLACK);
+		receivedMessageText.setEditable(false);
 		receivedMessageText.setBounds(10, 10, 516, 325);
 		frame.getContentPane().add(receivedMessageText);
-		receivedMessageText.setEditable(false);
-		receivedMessageText.setCaretColor(Color.LIGHT_GRAY);
-		receivedMessageText.setBorder(new TitledBorder(null, "\u804A\u5929\u5BA4", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		//receivedMessageText.setCaretColor(Color.LIGHT_GRAY);
+		//receivedMessageText.setBorder(new TitledBorder(null, "\u804A\u5929\u5BA4", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		receivedMessageText.setName("");
 		
 		scrollPane = new JScrollPane();
@@ -126,10 +130,10 @@ public class GroupChat {
 				try {
 					message=reader.readLine();
 					line+=2;
-					if(line>=16){
-						receivedMessageText.setText("");
-						line=0;
-					}
+					//if(line>=16){
+					//	receivedMessageText.setText("");
+					//	line=0;
+					//}
 					receivedMessageText.append(dateFormat.format(new Date())+'\n');
 					receivedMessageText.append("   "+message+'\n');
 				} catch (IOException e) {

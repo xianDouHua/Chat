@@ -19,7 +19,7 @@ public class PrivateChat {
     JTextField tfRemotePort = new JTextField(15);
     JTextField tfLocalSendPort = new JTextField(15);
     JTextField tfLocalReceivePort = new JTextField(15);
-    JTextArea allChatContent = new JTextArea();
+    TextArea allChatContent = new TextArea();
     JTextField sendChatContent = new JTextField(27);
     JButton connect = new JButton("Á¬½Ó");
     JButton disConnect = new JButton("¶Ï¿ª");

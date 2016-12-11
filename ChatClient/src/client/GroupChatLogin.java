@@ -1,4 +1,8 @@
 package client;
+/*
+ * 客户端群聊登录界面，负责登录和注册时与服务器的信息传送
+ * 与服务器连接的socket在此初始化
+ * **/
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
